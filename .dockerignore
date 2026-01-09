@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+venv_fastapi_gcp_pro
+.git
+.gitignore
+README.md
+.env
+.env.local
+*.log
+.DS_Store
+.gcloudignore
