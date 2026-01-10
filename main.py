@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-import httpx
 import os
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,43 +22,21 @@ app.add_middleware(
 async def root():
     return {"message": "Welcome to FastAPI GCP Pro"}
 
-@app.get("/greet")
-async def greet(name: Optional[str] = "World"):
+@app.get("/greet/{name}")
+async def greet(name: str):
     """A simple greeting endpoint"""
     return {"message": f"Hello, {name}!"}
 
-@app.get("/weather/today")
+@app.get("/weather")
 async def fetch_weather_today(city: str = "London"):
-    """Fetch today's weather for a given city"""
-    try:
-        # Using OpenWeatherMap API (you'll need to sign up for a free API key)
-        api_key = os.getenv("OPENWEATHER_API_KEY")
-        if not api_key:
-            raise HTTPException(status_code=500, detail="Weather API key not configured")
-        
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-        
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-        
-        weather_info = {
-            "city": data["name"],
-            "temperature": data["main"]["temp"],
-            "description": data["weather"][0]["description"],
-            "humidity": data["main"]["humidity"],
-            "wind_speed": data["wind"]["speed"]
-        }
-        
-        return weather_info
-        
-    except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=e.response.status_code, detail=f"Weather API error: {e.response.text}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching weather: {str(e)}")
-
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))  # Use PORT env var, default to 8000 for local dev
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    """Fetch today's weather for a given city (using mock data)"""
+    # Mock weather data
+    weather_info = {
+        "city": city,
+        "temperature": 22.5,
+        "description": "Partly cloudy",
+        "humidity": 65,
+        "wind_speed": 5.2
+    }
+    
+    return weather_info
