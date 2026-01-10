@@ -2,8 +2,22 @@ from fastapi import FastAPI, HTTPException
 import httpx
 import os
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="FastAPI GCP Pro", description="A simple FastAPI backend deployed on GCP")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001", 
+        "https://launch-an-app-sigma.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
